@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import SearchBox from './components/SearchBox';
+import CardList from './components/CardList';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -37,20 +40,15 @@ class App extends Component {
     return (
       <React.Fragment>
         <header>
-          <h1>Monsters rolodex</h1>
+          <h1 className='heading-primary'>Monsters rolodex</h1>
         </header>
         <main>
-          <input
-            type='search'
-            placeholder='Search for a monster'
-            onChange={handleSearchChange}
-            value={searchQuery}
+          <SearchBox
+            className='search-box'
+            placeholder='Search monsters'
+            onChangeHandler={handleSearchChange}
           />
-          <ul className='monsters-list'>
-            {filteredMonsters.map(monster => (
-              <li key={monster.id}>{monster.name}</li>
-            ))}
-          </ul>
+          <CardList monsters={filteredMonsters} />
         </main>
       </React.Fragment>
     );
