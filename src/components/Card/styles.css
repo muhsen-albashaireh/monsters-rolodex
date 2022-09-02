@@ -7,6 +7,8 @@
   border: 1px solid grey;
   cursor: pointer;
   display: flex;
+  height: 450px;
+  justify-content: center;
   flex-direction: column;
   padding: 25px;
   transform: translateZ(0);
