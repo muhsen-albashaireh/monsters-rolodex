@@ -1,58 +1,52 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 
 import SearchBox from './components/SearchBox';
 import CardList from './components/CardList';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      monsters: [],
-      searchQuery: '',
-    };
-  }
+const App = () => {
+  const [monsters, setMonsters] = React.useState([]);
+  const [filteredMonsters, setFilteredMonsters] = React.useState(monsters);
+  const [searchQuery, setSearchQuery] = React.useState('');
 
-  componentDidMount() {
+  React.useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then(response => response.json())
       .then(monsters => {
-        this.setState({ monsters }, () => console.log('monsters updated'));
+        setMonsters(monsters);
       });
-  }
+  }, []);
 
-  handleSearchChange = e => {
-    this.setState({
-      searchQuery: e.target.value,
-    });
-  };
-
-  render() {
-    const { monsters, searchQuery } = this.state;
-    const { handleSearchChange } = this;
-    const filteredMonsters = monsters.filter(monster => {
+  React.useEffect(() => {
+    const newFilteredMonsters = monsters.filter(monster => {
       const query = searchQuery.toLowerCase();
       const name = monster.name.toLowerCase();
 
       return name.includes(query);
     });
 
-    return (
-      <React.Fragment>
-        <header>
-          <h1 className='heading-primary'>Monsters rolodex</h1>
-        </header>
-        <main>
-          <SearchBox
-            className='search-box'
-            placeholder='Search monsters'
-            onChangeHandler={handleSearchChange}
-          />
-          <CardList monsters={filteredMonsters} />
-        </main>
-      </React.Fragment>
-    );
-  }
-}
+    setFilteredMonsters(newFilteredMonsters);
+  }, [monsters, searchQuery]);
+
+  const handleSearchChange = e => {
+    setSearchQuery(e.target.value);
+  };
+
+  return (
+    <React.Fragment>
+      <header>
+        <h1 className='heading-primary'>Monsters rolodex</h1>
+      </header>
+      <main>
+        <SearchBox
+          className='search-box'
+          placeholder='Search monsters'
+          onChangeHandler={handleSearchChange}
+        />
+        <CardList monsters={filteredMonsters} />
+      </main>
+    </React.Fragment>
+  );
+};
 
 export default App;
